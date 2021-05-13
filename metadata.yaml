@@ -1,6 +1,6 @@
 # Copyright 2021 Cornellius Metto
 # See LICENSE file for licensing details.
-name: charm-k8s-falco
+name: falco
 description: |
   TEMPLATE-TODO: fill out the charm's description
 summary: |
