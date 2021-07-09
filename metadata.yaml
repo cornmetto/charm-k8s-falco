@@ -2,18 +2,19 @@
 # See LICENSE file for licensing details.
 name: falco
 description: |
-  TEMPLATE-TODO: fill out the charm's description
+  The Falco Project is an open source runtime security tool originally built by Sysdig, Inc.
+  Falco uses system calls to secure and monitor a system by parsing Linux system calls from
+  the kernel runtime and asserting the stream against alerting rules.
+
 summary: |
-  TEMPLATE-TODO: fill out the charm's summary
+  Cloud-native runtime security project. 
 
-# TEMPLATE-TODO: replace with containers for your workload (delete for non-k8s)
 containers:
-  httpbin:
-    resource: httpbin-image
+  falco:
+    resource: falco-image
 
-# TEMPLATE-TODO: each container defined above must specify an oci-image resource
 resources:
-  httpbin-image:
+  falco-image:
     type: oci-image
-    description: OCI image for httpbin (kennethreitz/httpbin)
+    description: OCI image for falco (krisnova/falco-trace)
 
