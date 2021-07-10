@@ -162,8 +162,8 @@ program_output:
   program: "jq '{text: .output}' | curl -d @- -X POST https://hooks.slack.com/services/XXX"
 
 http_output:
-  enabled: false
-  url: http://some.url
+  enabled: {{ http_output_enabled }}
+  url: {{ http_output_url }}
 
 # gRPC server configuration.
 # The gRPC server is secure by default (mutual TLS) so you need to generate certificates and update their paths here.
@@ -183,4 +183,3 @@ grpc:
 # By enabling this all the output events will be kept in memory until you read them with a gRPC client.
 grpc_output:
   enabled: false
-  

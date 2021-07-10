@@ -8,7 +8,7 @@ import logging
 from ops.charm import CharmBase
 from ops.charm import ConfigChangedEvent
 from ops.main import main
-from ops.model import ActiveStatus
+from ops.model import ActiveStatus, ModelError
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 logger = logging.getLogger(__name__)
@@ -52,9 +52,27 @@ class CharmK8SFalcoCharm(CharmBase):
         """
         Update falco's config.
         """
+        container_name, service_name = "falco", "falco"
         template = template_env.get_template("falco.yaml")
-        container = self.unit.get_container("falco")
-        container.push(FALCO_CONFIG_FILE, template.render())
+        http_output = self.config["http-output"]
+        context = {
+            "http_output_enabled": False,
+            "http_output_url": ""
+        }
+        if len(http_output) > 0:
+            context["http_output_enabled"] = True
+            context["http_output_url"] = http_output
+        container = self.unit.get_container(container_name)
+        container.push(FALCO_CONFIG_FILE, template.render(context))
+
+        logger.info("Restarting falco...")
+        try:
+            is_running = container.get_service(service_name).is_running()
+            if is_running:
+                container.stop(service_name)
+                container.start(service_name)
+        except (ModelError, RuntimeError):
+            logging.info(f"Service '{service_name}' not found in container '{container_name}'")
 
 
 if __name__ == "__main__":
